@@ -225,10 +225,6 @@ class Student_list:
                                     break
                                 print("修改成功")
                                 self.showStu()
-
-
-
-
                     except:
                             print("输入的格式错误，请重新输入")
                             self.updateStu()
@@ -308,14 +304,67 @@ class Student_list:
             else:
                 print('输入错误，退出系统')
                 self.info()
+    #按学号查找学生
+    def find_no(self):
+        try:
+            no = int(input("请输入要查看的学号："))
+            if self.__exists(no):
+                for str in self.stulist[::]:
+                    if str.no == no:
+                        print(f"学号：{str.no}，姓名：{str.name}，数学成绩：{str.math}，语文成绩：{str.chinese}，英语成绩：{str.english}")
+                        break
+            else:
+                print("没有该学号的信息")
+            choice = input('是否继续查看(y/n)?\n').lower()
+            if choice == 'y':
+                self.find_no()
+            elif choice == 'n':
+                self.findStu()
+            else:
+                print('输入错误，退出系统')
+                self.info()
 
-
-
-
-
-
-
-
+        except:
+            print("您输入的格式有误，退出系统")
+            self.findStu()
+    #按姓名查找学生
+    def find_name(self):
+            name = input("请输入要查找的姓名：")
+            for stu in self.stulist:
+                if name == stu.name:
+                    print('学号:{}，姓名:{}、数学成绩:{}、语文成绩:{}、英语成绩:{}'.format(stu.no, stu.name, stu.math, stu.chinese,stu.english))
+            choice = input('是否继续查看(y/n)?\n').lower()
+            if choice == 'y':
+                self.find_name()
+            elif choice == 'n':
+                self.findStu()
+            else:
+                print('输入错误，退出系统')
+                self.info()
+    #查看总人数
+    def find_sum(self):
+            str = len(self.stulist)
+            print(f"总人数为{str}人")
+    #查看学生信息
+    def findStu(self):
+        try:
+            print("1.按学号查找")
+            print("2.按姓名查找")
+            print("3.查看总人数")
+            print("4.退回到上级")
+            s = int(input("请选择你要查找学生方式："))
+            if s == 1:
+                self.find_no()
+            elif s == 2:
+                self.find_name()
+            elif s == 3:
+                self.find_sum()
+            elif s == 4:
+                self.info()
+            else:
+                print("输入错误请重新输入")
+        except:
+            print("您输入的格式错误，退出系统")
     #导出学生信息
     def saveStu(self):
         #上下文管理器：with
@@ -336,8 +385,9 @@ class Student_list:
             print("该目录已有同名文件，请更换导出名字")
             exit()
 
-    #课程平均分
+    #个人课程平均分
     def avg(self):
+
         self.showStu()
         while True:
             try:
@@ -361,8 +411,31 @@ class Student_list:
             else:
                 print('输入错误，退出系统')
                 self.score()
-
-
+    #整体课程平均分
+    def avg_zt(self):
+        if len(self.stulist) > 0:
+            avg_math = sum([stu.math for stu in self.stulist])/len([stu.math for stu in self.stulist])
+            avg_chinese = sum([stu.chinese for stu in self.stulist])/len([stu.chinese for stu in self.stulist])
+            avg_english = sum([stu.english for stu in self.stulist])/len([stu.english for stu in self.stulist])
+            print(f"数学平均分：{avg_math}，语文平均分：{avg_chinese}，英语平均分：{avg_english}")
+            self.score()
+    #平均分菜单
+    def avg_main(self):
+        while True:
+            try:
+                print("平均分查看菜单")
+                print("1.查看个人平均分")
+                print("2.查看整体平均分")
+                s = int(input("请进行选择查看方式："))
+                if s == 1:
+                    self.avg()
+                elif s == 2:
+                    self.avg_zt()
+                else:
+                    print("请输入正确的查看方式")
+            except:
+                print("您输入的有误，退出系统")
+                self.score()
     #课程最高分
     def max(self):
                if len(self.stulist) > 0:
@@ -374,7 +447,7 @@ class Student_list:
                    print(f'英语成绩最高分是:{english_max}')
                else:
                    print('还没有学生成绩...')
-    #课程最底分
+    #课程最低分
     def min(self):
         if len(self.stulist) > 0:
             math_min = min([stu.math for stu in self.stulist])
@@ -384,12 +457,7 @@ class Student_list:
             print(f'语文成绩最底分是:{chinese_min}')
             print(f'英语成绩最底分是:{english_min}')
 
-
-
-    #按学号修改
-    def noStu(self):
-        for str in self.stulist[::]:
-            print(f"{str.no},{str.math}")
+    #
     #排序菜单
     def sortStu(self):
         self.showStu()
@@ -403,7 +471,8 @@ class Student_list:
             s = int(input("请输入您想进行的排序方式："))
             while True:
                 if s == 1:
-                    self.noStu()
+                    print("学号")
+                    # self.noStu()
                 elif s == 2:
                     print("姓名")
                 elif s == 3:
@@ -414,7 +483,7 @@ class Student_list:
                     print("英语")
                 else:
                     print("请输入指定数字")
-                    break
+                break
         except:
             print("您输入的格式错误，请重新输入")
     #学生成绩管理菜单
@@ -427,7 +496,7 @@ class Student_list:
         while True:
             s = input("score>").strip().lower()
             if s == 'avg':
-                self.avg()
+                self.avg_main()
             elif s == 'max':
                 self.max()
             elif s == 'min':
@@ -448,6 +517,7 @@ class Student_list:
         print("update->修改学生信息")
         print("show->显示学生信息")
         print("save->导出学生信息")
+        print("find-->查找学生信息")
         print("return-->返回")
         print("".center(52, '='))
         while True:
@@ -470,6 +540,9 @@ class Student_list:
             elif e == 'save':
                 print("输出学生信息".center(52, '*'))
                 self.saveStu()
+            elif  e == 'find':
+                print("查找学生信息".center(52, '*'))
+                self.findStu()
             elif e =='return':
                 self.main()
             else:
